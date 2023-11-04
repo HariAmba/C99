@@ -1,0 +1,50 @@
+import time,os,shutil
+
+def main():
+    path = ''
+    days = 30
+    seconds = time.time()-(days*24*60*60)
+    if os.path.exists(path):
+        for rootFolder,folders,files in os.walk(path):
+            if seconds >= get_file_folder_age(rootFolder):
+                remove_folder(rootFolder)
+                deleted_folders_count+=1
+                break
+            else:
+                for folder in folders:
+                    folder_path = os.path.join(rootFolder,folder)
+                    if seconds >= get_file_folder_age(folder_path):
+                        remove_folder(folder_path)
+                        deleted_folders_count += 1
+                for file in files:
+                    file_path = os.path.join(rootFolder,file)
+                    if seconds >= get_file_folder_age(file_path):
+                        remove_file(file_path)
+                        deleted_files_count += 1
+    else:
+                if seconds >= get_file_folder_age(path):
+                    remove_file(path)
+                    deleted_files_count += 1
+
+   
+    print(f'total folders deleted: {deleted_folders_count}')
+    print(f'total files deleted: {deleted_files_count}')
+
+def remove_folder(path):
+     if not shutil.rmtree(path):
+          print(f'{path} is removes successfully')
+     else:
+          print(f'unable to delete'+path)
+
+def remove_file(path):
+     if not os.remove(path):
+          print(f'{path} is removes successfully')
+     else:
+          print(f'unable to delete'+path)
+
+def get_file_folder_age(path):
+     ctime = os.stat(path).st_ctime
+     return ctime
+
+if __name__ == '__main__':
+     main()
